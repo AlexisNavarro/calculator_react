@@ -2,17 +2,30 @@
 
 import { useState } from "react"; // react hook that adds a state to a function component which will store and update calculator display
 import { evaluate } from "mathjs";
+
 export default function Calculator() {
     //display: stores current input/output on the screen, setDisplay: updates the display, useState("0"): intitializes the display to 0
     const [display, setDisplay] = useState("");
+    const [history, setHistory] = useState<{ equation: string; result: string }[]>([]);
 
     //function handles when user clicks on a button
-    const handleClick = (value: string) => {
+    const handleClick = async (value: string) => {
 
         //= is to evaluate the equation
         if (value === "=") {
             try {
+
+                const result = eval(display).toString();
                 setDisplay(evaluate(display).toString());
+                
+                //fetch request to call the post method while sending the equation from display and result
+                await fetch("/api/saveEquation", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ equation: display, result }),
+                });
+
+                setHistory([...history, { equation: display, result }]);
             } catch {
                 setDisplay("Error");
             }
@@ -42,6 +55,18 @@ export default function Calculator() {
                     </button>
                 ))}
             </div>
+
+            {/*History*/}
+            <div className="mt-4 w-64 bg-gray-100 p-2">
+                <h3 className="text-lg font-bold text-blue-500"> History:</h3>
+                {history.map((entry, index) => (
+                    <div key={index} className="text-gray-800">
+                        {entry.equation} = {entry.result}
+                    </div>
+
+                ))}
+            </div>
+
         </div>
     );
 
