@@ -17,7 +17,7 @@ export default function Calculator() {
 
                 const result = eval(display).toString();
                 setDisplay(evaluate(display).toString());
-                
+
                 //fetch request to call the post method while sending the equation from display and result
                 await fetch("/api/saveEquation", {
                     method: "POST",
