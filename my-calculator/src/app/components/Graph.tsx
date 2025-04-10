@@ -55,11 +55,11 @@ export default function Graph() {
     });
 
     return (
-        <div className="p-4 bg-white rounded shadow mt-6 w-full max-w-lg">
+        <div className="p-4 bg-white rounded shadow mt-6 w-full max-w-lg border border-red-600">
             <input
                 value={expression}
                 onChange={(e) => setExpression(e.target.value)}
-                className="w-full p-2 border rounded mb-4"
+                className="w-full p-2 border rounded mb-4 text-blue-600"
                 placeholder="Enter equation"
             />
             <Plot
@@ -72,7 +72,17 @@ export default function Graph() {
                         marker: { color: "blue" },
                     },
                 ]}
-                layout={{ title: `Graph of y = ${expression}` }}
+                //adjust the size of the plot object to fit the square container it was in
+                layout={{
+                    title: `Graph of y = ${expression}`,
+                    autosize: true,
+                    width: undefined,
+                    height: 400,
+                    margin: { t: 40, b: 40, l: 40, r: 20 },
+                }}
+                useResizeHandler={true}
+                style={{ width: "100%. height:100%" }}
+                config={{ responsive: true }}
             />
         </div>
     );
